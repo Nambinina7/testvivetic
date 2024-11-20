@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Tasks index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Tableau de bord</h1>
+
+        <h2>Nombre total de tâches par statut</h2>
+        <ul>
+        {% for task in tasksByStatus %}
+            <li>{{ task.status }} : {{ task.task_count }} tâche(s)</li>
+        {% endfor %}
+        </ul>
+
+        <h2>Tâches en retard</h2>
+        <ul>
+            {% for task in tasksOverdue %}
+                <li>{{ task.title }} (Date de fin : {{ task.endDate|date('d/m/Y') }}) - Statut : {{ task.status }}</li>
+            {% endfor %}                
+        </ul>
+
+
+    </div>   
+{% endblock %}
+

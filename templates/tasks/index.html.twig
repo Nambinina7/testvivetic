@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tasks index{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Tasks index</h1>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Priority</th>
+                    <th>StartDate</th>
+                    <th>EndDate</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for task in tasks %}
+                <tr>
+                    <td>{{ task.id }}</td>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.status }}</td>
+                    <td>{{ task.priority ? 'Yes' : 'No' }}</td>
+                    <td>{{ task.startDate ? task.startDate|date('Y-m-d') : '' }}</td>
+                    <td>{{ task.endDate ? task.endDate|date('Y-m-d') : '' }}</td>
+                    <td>
+                        <a href="{{ path('app_tasks_show', {'id': task.id}) }}">show</a>
+                        
+                        {# Lien d'édition uniquement pour les administrateurs ou si la tâche est assignée à l'utilisateur #}
+                        {% if is_granted('ROLE_ADMIN') or (is_granted('ROLE_MEMBRE') and task.user == app.user) %}
+                            <a href="{{ path('app_tasks_edit', {'id': task.id}) }}">edit</a>
+                        {% endif %}
+
+                        {# Lien de suppression uniquement pour les administrateurs #}
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_tasks_delete', {'id': task.id}) }}">delete</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {# Lien de création uniquement pour les administrateurs #}
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_tasks_new') }}">Create new</a>
+        {% endif %}
+    </div>
+{% endblock %}
